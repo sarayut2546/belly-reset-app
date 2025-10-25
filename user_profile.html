@@ -8,6 +8,7 @@
   <!-- Firebase -->
   <script src="https://www.gstatic.com/firebasejs/10.12.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.1/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.1/firebase-storage-compat.js"></script>
   <script src="firebaseConfig.js"></script>
 
   <!-- Bootstrap -->
@@ -26,8 +27,9 @@
 
     body {
       font-family: 'Kanit', sans-serif;
-      background: #f8f9fa;
+      background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
       min-height: 100vh;
+      overflow-x: hidden;
     }
 
     /* Sidebar */
@@ -35,62 +37,119 @@
       position: fixed;
       left: 0;
       top: 0;
+      width: 280px;
       height: 100vh;
-      width: 260px;
-      background: linear-gradient(180deg, #2e7d32 0%, #1b5e20 100%);
-      padding: 20px;
+      background: linear-gradient(180deg, rgba(15, 32, 39, 0.95) 0%, rgba(32, 58, 67, 0.95) 100%);
+      backdrop-filter: blur(20px);
+      box-shadow: 4px 0 30px rgba(0, 0, 0, 0.3);
+      padding: 30px 0;
       z-index: 1000;
-      box-shadow: 4px 0 20px rgba(0,0,0,0.1);
+      transition: transform 0.3s ease;
+      border-right: 1px solid rgba(67, 160, 71, 0.2);
     }
 
-    .sidebar-logo {
-      text-align: center;
-      padding: 20px 0;
-      border-bottom: 1px solid rgba(255,255,255,0.2);
-      margin-bottom: 30px;
+    .sidebar-header {
+      padding: 0 30px 30px;
+      border-bottom: 2px solid rgba(67, 160, 71, 0.2);
     }
 
-    .sidebar-logo h3 {
-      color: white;
-      font-weight: 700;
-      font-size: 1.5rem;
-      margin: 0;
+    .logo-section {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 10px;
+    }
+
+    .logo-icon {
+      width: 50px;
+      height: 50px;
+      background: linear-gradient(135deg, #43a047 0%, #2e7d32 100%);
+      border-radius: 12px;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 10px;
+      box-shadow: 0 4px 20px rgba(67, 160, 71, 0.4);
+      animation: pulse 2s ease-in-out infinite;
     }
 
-    .sidebar-menu {
-      list-style: none;
-      padding: 0;
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
     }
 
-    .menu-item {
-      margin-bottom: 8px;
+    .logo-icon i {
+      font-size: 24px;
+      color: #fff;
     }
 
-    .menu-link {
+    .logo-text h3 {
+      font-size: 20px;
+      font-weight: 700;
+      color: #fff;
+      margin: 0;
+    }
+
+    .logo-text p {
+      font-size: 12px;
+      color: #43a047;
+      margin: 0;
+    }
+
+    .sidebar-nav {
+      padding: 20px 0;
+    }
+
+    .nav-item {
+      margin: 0 15px 8px;
+    }
+
+    .nav-link {
       display: flex;
       align-items: center;
       gap: 12px;
-      padding: 14px 16px;
-      color: rgba(255,255,255,0.85);
+      padding: 14px 20px;
+      color: rgba(255, 255, 255, 0.7);
       text-decoration: none;
       border-radius: 12px;
       transition: all 0.3s;
       font-weight: 500;
+      font-size: 15px;
+      position: relative;
+      overflow: hidden;
     }
 
-    .menu-link:hover {
-      background: rgba(255,255,255,0.15);
-      color: white;
+    .nav-link::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      width: 3px;
+      background: linear-gradient(180deg, #43a047 0%, #2e7d32 100%);
+      transform: scaleY(0);
+      transition: transform 0.3s;
+    }
+
+    .nav-link:hover::before,
+    .nav-link.active::before {
+      transform: scaleY(1);
+    }
+
+    .nav-link i {
+      font-size: 20px;
+      width: 24px;
+      text-align: center;
+    }
+
+    .nav-link:hover {
+      background: rgba(67, 160, 71, 0.1);
+      color: #43a047;
       transform: translateX(5px);
     }
 
-    .menu-link.active {
-      background: rgba(255,255,255,0.2);
-      color: white;
+    .nav-link.active {
+      background: linear-gradient(90deg, rgba(67, 160, 71, 0.2) 0%, rgba(46, 125, 50, 0.1) 100%);
+      color: #43a047;
     }
 
     .sidebar-footer {
@@ -102,7 +161,7 @@
 
     .logout-sidebar {
       width: 100%;
-      background: rgba(239, 83, 80, 0.9);
+      background: linear-gradient(135deg, rgba(239, 83, 80, 0.9) 0%, rgba(229, 57, 53, 0.9) 100%);
       color: white;
       padding: 14px;
       border-radius: 12px;
@@ -117,134 +176,316 @@
     }
 
     .logout-sidebar:hover {
-      background: #ef5350;
+      background: linear-gradient(135deg, #ef5350 0%, #e53935 100%);
       transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(239, 83, 80, 0.4);
     }
 
     /* Main Content */
     .main-content {
-      margin-left: 260px;
+      margin-left: 280px;
       padding: 30px;
       min-height: 100vh;
     }
 
-    .page-header {
-      background: white;
-      padding: 25px;
-      border-radius: 14px;
-      margin-bottom: 25px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    .top-bar {
+      background: linear-gradient(135deg, rgba(15, 32, 39, 0.8) 0%, rgba(32, 58, 67, 0.8) 100%);
+      backdrop-filter: blur(20px);
+      border-radius: 20px;
+      padding: 25px 35px;
+      margin-bottom: 30px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(67, 160, 71, 0.2);
     }
 
-    .page-title {
-      font-size: 1.6rem;
+    .page-title h1 {
+      font-size: 28px;
       font-weight: 700;
-      color: #2e7d32;
+      color: #fff;
+      margin: 0;
       display: flex;
       align-items: center;
       gap: 12px;
-      margin: 0;
     }
 
-    /* Profile Grid */
-    .profile-grid {
+    .page-title h1 i {
+      color: #43a047;
+    }
+
+    /* Alert Messages */
+    .alert {
+      padding: 15px 20px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      display: none;
+      align-items: center;
+      gap: 10px;
+      backdrop-filter: blur(20px);
+    }
+
+    .alert.show {
+      display: flex;
+      animation: slideIn 0.3s ease-out;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .alert-success {
+      background: rgba(102, 187, 106, 0.2);
+      color: #66bb6a;
+      border: 2px solid rgba(102, 187, 106, 0.3);
+    }
+
+    .alert-error {
+      background: rgba(239, 83, 80, 0.2);
+      color: #ef5350;
+      border: 2px solid rgba(239, 83, 80, 0.3);
+    }
+
+    /* Profile Layout */
+    .profile-container {
       display: grid;
-      grid-template-columns: 1fr 2fr;
+      grid-template-columns: 380px 1fr;
       gap: 25px;
-      margin-bottom: 25px;
     }
 
-    .profile-card {
-      background: white;
-      border-radius: 14px;
-      padding: 30px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    /* Left Profile Card */
+    .profile-sidebar {
+      background: linear-gradient(135deg, rgba(15, 32, 39, 0.8) 0%, rgba(32, 58, 67, 0.8) 100%);
+      backdrop-filter: blur(20px);
+      border-radius: 20px;
+      padding: 35px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(67, 160, 71, 0.2);
+      height: fit-content;
+      position: sticky;
+      top: 30px;
     }
 
-    /* Profile Avatar Section */
-    .profile-avatar {
+    /* Avatar Section */
+    .avatar-section {
       text-align: center;
-      padding-bottom: 25px;
-      border-bottom: 2px solid #f0f0f0;
-      margin-bottom: 25px;
+      margin-bottom: 30px;
+      position: relative;
+    }
+
+    .avatar-wrapper {
+      position: relative;
+      display: inline-block;
+      margin-bottom: 20px;
     }
 
     .avatar-circle {
-      width: 140px;
-      height: 140px;
+      width: 160px;
+      height: 160px;
       border-radius: 50%;
       background: linear-gradient(135deg, #43a047, #2e7d32);
       display: flex;
       align-items: center;
       justify-content: center;
-      margin: 0 auto 20px;
       font-size: 4rem;
       color: white;
       font-weight: 700;
-      box-shadow: 0 8px 20px rgba(46, 125, 50, 0.3);
+      box-shadow: 0 12px 30px rgba(67, 160, 71, 0.4);
+      border: 4px solid rgba(67, 160, 71, 0.3);
+      overflow: hidden;
+      transition: all 0.3s;
+    }
+
+    .avatar-circle:hover {
+      transform: scale(1.05);
+      box-shadow: 0 15px 40px rgba(67, 160, 71, 0.5);
+    }
+
+    .avatar-circle img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .avatar-upload-btn {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      width: 45px;
+      height: 45px;
+      background: linear-gradient(135deg, #43a047 0%, #2e7d32 100%);
+      border-radius: 50%;
+      border: 3px solid rgba(15, 32, 39, 0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s;
+      color: white;
+      font-size: 18px;
+      box-shadow: 0 4px 15px rgba(67, 160, 71, 0.4);
+    }
+
+    .avatar-upload-btn:hover {
+      transform: scale(1.1);
+      background: linear-gradient(135deg, #66bb6a 0%, #43a047 100%);
+    }
+
+    .avatar-upload-input {
+      display: none;
     }
 
     .profile-name {
-      font-size: 1.5rem;
+      font-size: 1.8rem;
       font-weight: 700;
-      color: #2e7d32;
+      color: #fff;
       margin-bottom: 8px;
     }
 
     .profile-email {
-      color: #666;
+      color: rgba(255, 255, 255, 0.6);
       font-size: 0.95rem;
+      margin-bottom: 20px;
     }
 
-    .profile-stats {
+    .profile-divider {
+      height: 2px;
+      background: linear-gradient(90deg, transparent, rgba(67, 160, 71, 0.3), transparent);
+      margin: 25px 0;
+    }
+
+    /* Stats Grid */
+    .stats-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 15px;
-      margin-top: 25px;
+      gap: 12px;
+      margin-bottom: 25px;
     }
 
-    .stat-box {
-      background: #f8f9fa;
+    .stat-mini {
+      background: rgba(67, 160, 71, 0.1);
       padding: 15px;
-      border-radius: 10px;
+      border-radius: 12px;
       text-align: center;
+      border: 1px solid rgba(67, 160, 71, 0.2);
+      transition: all 0.3s;
     }
 
-    .stat-label {
-      font-size: 0.85rem;
-      color: #666;
+    .stat-mini:hover {
+      background: rgba(67, 160, 71, 0.15);
+      transform: translateY(-2px);
+    }
+
+    .stat-mini-label {
+      font-size: 0.75rem;
+      color: rgba(255, 255, 255, 0.6);
+      text-transform: uppercase;
+      letter-spacing: 1px;
       margin-bottom: 5px;
     }
 
-    .stat-number {
+    .stat-mini-value {
       font-size: 1.8rem;
       font-weight: 700;
-      color: #2e7d32;
+      color: #43a047;
+      line-height: 1;
     }
 
-    .stat-unit {
-      font-size: 0.9rem;
-      color: #999;
+    .stat-mini-unit {
+      font-size: 0.85rem;
+      color: rgba(255, 255, 255, 0.5);
+      margin-top: 2px;
     }
 
-    /* Form Section */
-    .section-title {
-      font-size: 1.2rem;
-      font-weight: 600;
-      color: #333;
-      margin-bottom: 20px;
+    /* Health Cards */
+    .health-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .health-mini {
+      background: rgba(67, 160, 71, 0.05);
+      padding: 15px 10px;
+      border-radius: 12px;
+      text-align: center;
+      border: 1px solid rgba(67, 160, 71, 0.15);
+      transition: all 0.3s;
+    }
+
+    .health-mini:hover {
+      background: rgba(67, 160, 71, 0.1);
+      border-color: rgba(67, 160, 71, 0.3);
+    }
+
+    .health-mini-icon {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, rgba(67, 160, 71, 0.2), rgba(46, 125, 50, 0.2));
+      border-radius: 10px;
       display: flex;
       align-items: center;
-      gap: 10px;
-      padding-bottom: 12px;
-      border-bottom: 2px solid #f0f0f0;
-    }
-
-    .section-title i {
-      color: #2e7d32;
+      justify-content: center;
+      margin: 0 auto 10px;
       font-size: 1.3rem;
+      color: #43a047;
     }
 
+    .health-mini-label {
+      font-size: 0.7rem;
+      color: rgba(255, 255, 255, 0.6);
+      margin-bottom: 3px;
+    }
+
+    .health-mini-value {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #66bb6a;
+      line-height: 1;
+    }
+
+    .health-mini-unit {
+      font-size: 0.7rem;
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    /* Right Form Card */
+    .form-card {
+      background: linear-gradient(135deg, rgba(15, 32, 39, 0.8) 0%, rgba(32, 58, 67, 0.8) 100%);
+      backdrop-filter: blur(20px);
+      border-radius: 20px;
+      padding: 35px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(67, 160, 71, 0.2);
+    }
+
+    .form-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 2px solid rgba(67, 160, 71, 0.2);
+    }
+
+    .form-header i {
+      font-size: 1.8rem;
+      color: #43a047;
+    }
+
+    .form-header h2 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #fff;
+      margin: 0;
+    }
+
+    /* Form Grid */
     .form-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -263,31 +504,52 @@
 
     .form-label {
       font-weight: 600;
-      color: #333;
-      margin-bottom: 8px;
+      color: rgba(255, 255, 255, 0.9);
+      margin-bottom: 10px;
       font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .form-label i {
+      color: #43a047;
+      font-size: 0.9rem;
     }
 
     .form-input,
     .form-select {
-      padding: 12px 15px;
-      border: 2px solid #e0e0e0;
-      border-radius: 10px;
+      padding: 14px 16px;
+      border: 2px solid rgba(67, 160, 71, 0.2);
+      background: rgba(15, 32, 39, 0.5);
+      border-radius: 12px;
       font-family: 'Kanit', sans-serif;
       font-size: 0.95rem;
+      color: #fff;
       transition: all 0.3s;
     }
 
     .form-input:focus,
     .form-select:focus {
       outline: none;
-      border-color: #2e7d32;
-      box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.1);
+      border-color: #43a047;
+      background: rgba(15, 32, 39, 0.7);
+      box-shadow: 0 0 0 4px rgba(67, 160, 71, 0.1);
     }
 
     .form-input:disabled {
-      background: #f5f5f5;
+      background: rgba(255, 255, 255, 0.05);
       cursor: not-allowed;
+      opacity: 0.6;
+    }
+
+    .form-select {
+      cursor: pointer;
+    }
+
+    .form-select option {
+      background: #1a2a32;
+      color: #fff;
     }
 
     /* Buttons */
@@ -299,11 +561,11 @@
 
     .btn-primary {
       flex: 1;
-      padding: 14px;
-      background: #2e7d32;
+      padding: 16px;
+      background: linear-gradient(135deg, #43a047 0%, #2e7d32 100%);
       color: white;
       border: none;
-      border-radius: 10px;
+      border-radius: 12px;
       font-weight: 600;
       font-size: 1rem;
       cursor: pointer;
@@ -312,21 +574,26 @@
       align-items: center;
       justify-content: center;
       gap: 8px;
+      box-shadow: 0 4px 15px rgba(67, 160, 71, 0.3);
     }
 
     .btn-primary:hover {
-      background: #1b5e20;
+      background: linear-gradient(135deg, #66bb6a 0%, #43a047 100%);
       transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(46, 125, 50, 0.3);
+      box-shadow: 0 6px 20px rgba(67, 160, 71, 0.4);
+    }
+
+    .btn-primary:active {
+      transform: translateY(0);
     }
 
     .btn-secondary {
       flex: 1;
-      padding: 14px;
-      background: white;
-      color: #666;
-      border: 2px solid #e0e0e0;
-      border-radius: 10px;
+      padding: 16px;
+      background: rgba(255, 255, 255, 0.05);
+      color: rgba(255, 255, 255, 0.8);
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      border-radius: 12px;
       font-weight: 600;
       font-size: 1rem;
       cursor: pointer;
@@ -338,63 +605,12 @@
     }
 
     .btn-secondary:hover {
-      border-color: #2e7d32;
-      color: #2e7d32;
+      border-color: #43a047;
+      color: #43a047;
+      background: rgba(67, 160, 71, 0.1);
     }
 
-    /* Health Info Cards */
-    .health-info-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 15px;
-      margin-top: 25px;
-    }
-
-    .health-card {
-      background: #f8f9fa;
-      padding: 20px;
-      border-radius: 12px;
-      text-align: center;
-      border: 2px solid transparent;
-      transition: all 0.3s;
-    }
-
-    .health-card:hover {
-      border-color: #2e7d32;
-      transform: translateY(-3px);
-    }
-
-    .health-icon {
-      width: 50px;
-      height: 50px;
-      background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 12px;
-      font-size: 1.5rem;
-      color: #2e7d32;
-    }
-
-    .health-label {
-      font-size: 0.85rem;
-      color: #666;
-      margin-bottom: 5px;
-    }
-
-    .health-value {
-      font-size: 1.5rem;
-      font-weight: 700;
-      color: #2e7d32;
-    }
-
-    .health-unit {
-      font-size: 0.85rem;
-      color: #999;
-    }
-
-    /* Loading & Success States */
+    /* Loading Overlay */
     .loading-overlay {
       display: none;
       position: fixed;
@@ -402,7 +618,8 @@
       left: 0;
       right: 0;
       bottom: 0;
-      background: rgba(0,0,0,0.5);
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(10px);
       z-index: 9999;
       align-items: center;
       justify-content: center;
@@ -413,20 +630,23 @@
     }
 
     .loading-content {
-      background: white;
-      padding: 30px;
-      border-radius: 14px;
+      background: linear-gradient(135deg, rgba(15, 32, 39, 0.95) 0%, rgba(32, 58, 67, 0.95) 100%);
+      backdrop-filter: blur(20px);
+      padding: 40px;
+      border-radius: 20px;
       text-align: center;
+      border: 2px solid rgba(67, 160, 71, 0.3);
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
     }
 
     .loading-spinner {
-      width: 50px;
-      height: 50px;
-      border: 4px solid #f3f3f3;
-      border-top: 4px solid #4caf50;
+      width: 60px;
+      height: 60px;
+      border: 5px solid rgba(67, 160, 71, 0.2);
+      border-top: 5px solid #43a047;
       border-radius: 50%;
       animation: spin 1s linear infinite;
-      margin: 0 auto 15px;
+      margin: 0 auto 20px;
     }
 
     @keyframes spin {
@@ -434,92 +654,155 @@
       100% { transform: rotate(360deg); }
     }
 
-    .alert {
-      padding: 15px 20px;
-      border-radius: 10px;
-      margin-bottom: 20px;
+    .loading-content p {
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 1rem;
+      margin: 0;
+    }
+
+    /* Mobile Toggle */
+    .mobile-toggle {
       display: none;
-      align-items: center;
-      gap: 10px;
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(135deg, #43a047 0%, #2e7d32 100%);
+      border-radius: 50%;
+      border: none;
+      color: #fff;
+      font-size: 24px;
+      cursor: pointer;
+      box-shadow: 0 8px 25px rgba(67, 160, 71, 0.4);
+      z-index: 1001;
+      transition: all 0.3s;
     }
 
-    .alert.show {
-      display: flex;
+    .mobile-toggle:hover {
+      transform: scale(1.1);
     }
 
-    .alert-success {
-      background: #e8f5e9;
-      color: #2e7d32;
-      border: 2px solid #c8e6c9;
+    /* BMI Badge */
+    .bmi-badge {
+      display: inline-block;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      margin-top: 8px;
     }
 
-    .alert-error {
-      background: #ffebee;
-      color: #c62828;
-      border: 2px solid #ef9a9a;
-    }
+    .bmi-underweight { background: rgba(66, 165, 245, 0.2); color: #42a5f5; }
+    .bmi-normal { background: rgba(102, 187, 106, 0.2); color: #66bb6a; }
+    .bmi-overweight { background: rgba(255, 167, 38, 0.2); color: #ffa726; }
+    .bmi-obese { background: rgba(239, 83, 80, 0.2); color: #ef5350; }
 
     /* Responsive */
-    @media (max-width: 1024px) {
-      .profile-grid {
+    @media (max-width: 1200px) {
+      .profile-container {
         grid-template-columns: 1fr;
+      }
+
+      .profile-sidebar {
+        position: relative;
+        top: 0;
+      }
+
+      .health-cards {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    @media (max-width: 968px) {
+      .sidebar {
+        transform: translateX(-100%);
+      }
+
+      .sidebar.active {
+        transform: translateX(0);
+      }
+
+      .main-content {
+        margin-left: 0;
+        padding: 20px;
+      }
+
+      .mobile-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
 
       .form-grid {
         grid-template-columns: 1fr;
       }
 
-      .health-info-grid {
+      .stats-grid {
         grid-template-columns: repeat(2, 1fr);
       }
     }
 
-    @media (max-width: 768px) {
-      .main-content {
-        margin-left: 0;
-        padding: 20px;
-      }
-
-      .sidebar {
-        transform: translateX(-100%);
+    @media (max-width: 576px) {
+      .stats-grid,
+      .health-cards {
+        grid-template-columns: 1fr;
       }
 
       .button-group {
         flex-direction: column;
       }
 
-      .health-info-grid {
-        grid-template-columns: 1fr;
+      .avatar-circle {
+        width: 120px;
+        height: 120px;
+        font-size: 3rem;
       }
     }
   </style>
 </head>
 <body>
   <!-- Sidebar -->
-  <div class="sidebar">
-    <div class="sidebar-logo">
-      <h3><i class="bi bi-heart-pulse-fill"></i> Belly Reset</h3>
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="logo-section">
+        <div class="logo-icon">
+          <i class="bi bi-heart-pulse"></i>
+        </div>
+        <div class="logo-text">
+          <h3>Belly Reset</h3>
+          <p>Health Tracker</p>
+        </div>
+      </div>
     </div>
-    <ul class="sidebar-menu">
-      <li class="menu-item">
-        <a href="user_dashboard.html" class="menu-link">
+
+    <nav class="sidebar-nav">
+      <div class="nav-item">
+        <a href="user_dashboard.html" class="nav-link">
           <i class="bi bi-speedometer2"></i>
           <span>แดชบอร์ด</span>
         </a>
-      </li>
-      <li class="menu-item">
-        <a href="user_articles.html" class="menu-link">
+      </div>
+      <div class="nav-item">
+        <a href="user_articles.html" class="nav-link">
           <i class="bi bi-newspaper"></i>
           <span>บทความ</span>
         </a>
-      </li>
-      <li class="menu-item">
-        <a href="user_profile.html" class="menu-link active">
+      </div>
+      <div class="nav-item">
+        <a href="user_exercise.html" class="nav-link">
+          <i class="bi bi-person-arms-up"></i>
+          <span>ท่าออกกำลังกาย</span>
+        </a>
+      </div>
+      <div class="nav-item">
+        <a href="user_profile.html" class="nav-link active">
           <i class="bi bi-person-circle"></i>
           <span>โปรไฟล์</span>
         </a>
-      </li>
-    </ul>
+      </div>
+    </nav>
+
     <div class="sidebar-footer">
       <button class="logout-sidebar" onclick="logout()">
         <i class="bi bi-box-arrow-right"></i>
@@ -532,18 +815,20 @@
   <div class="loading-overlay" id="loading-overlay">
     <div class="loading-content">
       <div class="loading-spinner"></div>
-      <p>กำลังบันทึกข้อมูล...</p>
+      <p id="loading-text">กำลังบันทึกข้อมูล...</p>
     </div>
   </div>
 
   <!-- Main Content -->
   <div class="main-content">
-    <!-- Page Header -->
-    <div class="page-header">
-      <h1 class="page-title">
-        <i class="bi bi-person-circle"></i>
-        โปรไฟล์ของฉัน
-      </h1>
+    <!-- Top Bar -->
+    <div class="top-bar">
+      <div class="page-title">
+        <h1>
+          <i class="bi bi-person-circle"></i>
+          โปรไฟล์ของฉัน
+        </h1>
+      </div>
     </div>
 
     <!-- Alert Messages -->
@@ -557,86 +842,108 @@
       <span id="error-message">เกิดข้อผิดพลาด!</span>
     </div>
 
-    <!-- Profile Grid -->
-    <div class="profile-grid">
-      <!-- Left Column: Avatar & Stats -->
-      <div class="profile-card">
-        <div class="profile-avatar">
-          <div class="avatar-circle" id="avatar-initial">U</div>
+    <!-- Profile Container -->
+    <div class="profile-container">
+      <!-- Left Sidebar -->
+      <div class="profile-sidebar">
+        <!-- Avatar Section -->
+        <div class="avatar-section">
+          <div class="avatar-wrapper">
+            <div class="avatar-circle" id="avatar-circle">U</div>
+            <label class="avatar-upload-btn" for="avatar-upload">
+              <i class="bi bi-camera-fill"></i>
+            </label>
+            <input type="file" id="avatar-upload" class="avatar-upload-input" accept="image/*">
+          </div>
           <div class="profile-name" id="profile-name">ผู้ใช้</div>
           <div class="profile-email" id="profile-email">user@example.com</div>
         </div>
 
-        <div class="profile-stats">
-          <div class="stat-box">
-            <div class="stat-label">น้ำหนัก</div>
-            <div class="stat-number" id="display-weight">0</div>
-            <div class="stat-unit">กก.</div>
+        <div class="profile-divider"></div>
+
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+          <div class="stat-mini">
+            <div class="stat-mini-label">น้ำหนัก</div>
+            <div class="stat-mini-value" id="display-weight">0</div>
+            <div class="stat-mini-unit">กก.</div>
           </div>
-          <div class="stat-box">
-            <div class="stat-label">ส่วนสูง</div>
-            <div class="stat-number" id="display-height">0</div>
-            <div class="stat-unit">ซม.</div>
+          <div class="stat-mini">
+            <div class="stat-mini-label">ส่วนสูง</div>
+            <div class="stat-mini-value" id="display-height">0</div>
+            <div class="stat-mini-unit">ซม.</div>
           </div>
-          <div class="stat-box">
-            <div class="stat-label">อายุ</div>
-            <div class="stat-number" id="display-age">0</div>
-            <div class="stat-unit">ปี</div>
+          <div class="stat-mini">
+            <div class="stat-mini-label">อายุ</div>
+            <div class="stat-mini-value" id="display-age">0</div>
+            <div class="stat-mini-unit">ปี</div>
           </div>
-          <div class="stat-box">
-            <div class="stat-label">BMI</div>
-            <div class="stat-number" id="display-bmi">0</div>
-            <div class="stat-unit"></div>
+          <div class="stat-mini">
+            <div class="stat-mini-label">BMI</div>
+            <div class="stat-mini-value" id="display-bmi">0</div>
+            <div id="bmi-status"></div>
           </div>
         </div>
 
-        <div class="health-info-grid">
-          <div class="health-card">
-            <div class="health-icon"><i class="bi bi-fire"></i></div>
-            <div class="health-label">BMR</div>
-            <div class="health-value" id="display-bmr">0</div>
-            <div class="health-unit">แคล/วัน</div>
+        <div class="health-cards">
+          <div class="health-mini">
+            <div class="health-mini-icon"><i class="bi bi-fire"></i></div>
+            <div class="health-mini-label">BMR</div>
+            <div class="health-mini-value" id="display-bmr">0</div>
+            <div class="health-mini-unit">แคล/วัน</div>
           </div>
-          <div class="health-card">
-            <div class="health-icon"><i class="bi bi-lightning-charge"></i></div>
-            <div class="health-label">TDEE</div>
-            <div class="health-value" id="display-tdee">0</div>
-            <div class="health-unit">แคล/วัน</div>
+          <div class="health-mini">
+            <div class="health-mini-icon"><i class="bi bi-lightning-charge"></i></div>
+            <div class="health-mini-label">TDEE</div>
+            <div class="health-mini-value" id="display-tdee">0</div>
+            <div class="health-mini-unit">แคล/วัน</div>
           </div>
-          <div class="health-card">
-            <div class="health-icon"><i class="bi bi-activity"></i></div>
-            <div class="health-label">ระดับกิจกรรม</div>
-            <div class="health-value" style="font-size: 0.9rem;" id="display-activity">-</div>
+          <div class="health-mini">
+            <div class="health-mini-icon"><i class="bi bi-activity"></i></div>
+            <div class="health-mini-label">กิจกรรม</div>
+            <div class="health-mini-value" style="font-size: 0.9rem;" id="display-activity">-</div>
           </div>
         </div>
       </div>
 
-      <!-- Right Column: Edit Form -->
-      <div class="profile-card">
-        <div class="section-title">
+      <!-- Right Form Card -->
+      <div class="form-card">
+        <div class="form-header">
           <i class="bi bi-pencil-square"></i>
-          แก้ไขข้อมูลส่วนตัว
+          <h2>แก้ไขข้อมูลส่วนตัว</h2>
         </div>
 
         <form id="profile-form">
           <div class="form-grid">
             <div class="form-group full-width">
-              <label class="form-label">อีเมล</label>
+              <label class="form-label">
+                <i class="bi bi-envelope"></i>
+                อีเมล
+              </label>
               <input type="email" class="form-input" id="email" disabled>
             </div>
 
             <div class="form-group">
-              <label class="form-label">ชื่อ-นามสกุล</label>
+              <label class="form-label">
+                <i class="bi bi-person"></i>
+                ชื่อ-นามสกุล
+              </label>
               <input type="text" class="form-input" id="name" required>
             </div>
 
             <div class="form-group">
-              <label class="form-label">อายุ (ปี)</label>
+              <label class="form-label">
+                <i class="bi bi-calendar"></i>
+                อายุ (ปี)
+              </label>
               <input type="number" class="form-input" id="age" min="1" max="120" required>
             </div>
 
             <div class="form-group">
-              <label class="form-label">เพศ</label>
+              <label class="form-label">
+                <i class="bi bi-gender-ambiguous"></i>
+                เพศ
+              </label>
               <select class="form-select" id="gender" required>
                 <option value="">เลือกเพศ</option>
                 <option value="male">ชาย</option>
@@ -645,17 +952,26 @@
             </div>
 
             <div class="form-group">
-              <label class="form-label">น้ำหนัก (กก.)</label>
+              <label class="form-label">
+                <i class="bi bi-speedometer"></i>
+                น้ำหนัก (กก.)
+              </label>
               <input type="number" class="form-input" id="weight" step="0.1" min="1" required>
             </div>
 
             <div class="form-group">
-              <label class="form-label">ส่วนสูง (ซม.)</label>
+              <label class="form-label">
+                <i class="bi bi-rulers"></i>
+                ส่วนสูง (ซม.)
+              </label>
               <input type="number" class="form-input" id="height" step="0.1" min="1" required>
             </div>
 
             <div class="form-group full-width">
-              <label class="form-label">ระดับการออกกำลังกาย</label>
+              <label class="form-label">
+                <i class="bi bi-activity"></i>
+                ระดับการออกกำลังกาย
+              </label>
               <select class="form-select" id="activityLevel" required>
                 <option value="">เลือกระดับกิจกรรม</option>
                 <option value="1.2">นั่งทำงาน ไม่ค่อยเคลื่อนไหว</option>
@@ -682,9 +998,15 @@
     </div>
   </div>
 
+  <!-- Mobile Toggle -->
+  <button class="mobile-toggle" onclick="toggleSidebar()">
+    <i class="bi bi-list"></i>
+  </button>
+
   <script>
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
+    const storage = firebase.storage();
 
     const userId = sessionStorage.getItem("userId");
     const userRole = sessionStorage.getItem("userRole");
@@ -692,6 +1014,10 @@
     if (!userId || userRole !== "user") {
       window.location.href = "login.html";
     }
+
+    // Cloudinary Configuration
+    const CLOUDINARY_URL = "https://api.cloudinary.com/v1_1/dswsrzmdo/image/upload";
+    const CLOUDINARY_UPLOAD_PRESET = "belly_reset_profile";
 
     // Load user data
     async function loadUserData() {
@@ -705,10 +1031,18 @@
 
         const data = userDoc.data();
         
-        // Update display
-        document.getElementById("profile-name").textContent = data.name || "ผู้ใช้";
+        // Update profile display
+        const userName = data.name || "ผู้ใช้";
+        document.getElementById("profile-name").textContent = userName;
         document.getElementById("profile-email").textContent = data.email || "";
-        document.getElementById("avatar-initial").textContent = (data.name || "U").charAt(0).toUpperCase();
+        
+        // Update avatar
+        const avatarElement = document.getElementById("avatar-circle");
+        if (data.profileImage) {
+          avatarElement.innerHTML = `<img src="${data.profileImage}" alt="${userName}">`;
+        } else {
+          avatarElement.textContent = userName.charAt(0).toUpperCase();
+        }
         
         // Update form
         document.getElementById("email").value = data.email || "";
@@ -727,6 +1061,11 @@
         document.getElementById("display-bmr").textContent = data.bmr ? data.bmr.toFixed(0) : "0";
         document.getElementById("display-tdee").textContent = data.tdee ? data.tdee.toFixed(0) : "0";
         
+        // Update BMI status
+        if (data.bmi) {
+          updateBMIStatus(data.bmi);
+        }
+        
         // Activity level display
         const activityLabels = {
           "1.2": "น้อย",
@@ -741,6 +1080,29 @@
         console.error("Error loading user data:", error);
         showError("ไม่สามารถโหลดข้อมูลได้");
       }
+    }
+
+    // Update BMI status
+    function updateBMIStatus(bmi) {
+      let status = "";
+      let className = "";
+      
+      if (bmi < 18.5) {
+        status = "น้ำหนักน้อย";
+        className = "bmi-underweight";
+      } else if (bmi < 23) {
+        status = "ปกติ";
+        className = "bmi-normal";
+      } else if (bmi < 25) {
+        status = "เกิน";
+        className = "bmi-overweight";
+      } else {
+        status = "อ้วน";
+        className = "bmi-obese";
+      }
+      
+      document.getElementById("bmi-status").innerHTML = 
+        `<span class="bmi-badge ${className}">${status}</span>`;
     }
 
     // Calculate BMI, BMR, TDEE
@@ -760,6 +1122,64 @@
       return { bmi, bmr, tdee };
     }
 
+    // Handle avatar upload
+    document.getElementById("avatar-upload").addEventListener("change", async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      // Validate file type
+      if (!file.type.startsWith('image/')) {
+        showError("กรุณาเลือกไฟล์รูปภาพเท่านั้น");
+        return;
+      }
+
+      // Validate file size (max 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        showError("ขนาดไฟล์ต้องไม่เกิน 5MB");
+        return;
+      }
+
+      showLoading(true, "กำลังอัปโหลดรูปภาพ...");
+
+      try {
+        // Upload to Cloudinary
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
+        formData.append("folder", "belly_reset/profiles");
+
+        const response = await fetch(CLOUDINARY_URL, {
+          method: "POST",
+          body: formData
+        });
+
+        if (!response.ok) {
+          throw new Error("อัปโหลดรูปภาพไม่สำเร็จ");
+        }
+
+        const data = await response.json();
+        const imageUrl = data.secure_url;
+
+        // Update Firestore
+        await db.collection("users").doc(userId).update({
+          profileImage: imageUrl,
+          updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+
+        // Update UI
+        document.getElementById("avatar-circle").innerHTML = 
+          `<img src="${imageUrl}" alt="Profile">`;
+
+        showLoading(false);
+        showSuccess("อัปโหลดรูปโปรไฟล์สำเร็จ!");
+
+      } catch (error) {
+        console.error("Error uploading image:", error);
+        showLoading(false);
+        showError("ไม่สามารถอัปโหลดรูปภาพได้");
+      }
+    });
+
     // Save profile
     document.getElementById("profile-form").addEventListener("submit", async (e) => {
       e.preventDefault();
@@ -778,7 +1198,7 @@
       
       const { bmi, bmr, tdee } = calculateHealth(weight, height, age, gender, activityLevel);
       
-      showLoading(true);
+      showLoading(true, "กำลังบันทึกข้อมูล...");
       
       try {
         await db.collection("users").doc(userId).update({
@@ -794,27 +1214,26 @@
           updatedAt: firebase.firestore.FieldValue.serverTimestamp()
         });
         
-// ✅ เพิ่มน้ำหนักล่าสุดเข้า logs/{วันที่วันนี้}
-const today = new Date();
-const dateId = new Date(today.getTime() - today.getTimezoneOffset() * 60000)
-  .toISOString()
-  .split("T")[0];
+        // Add weight log
+        const today = new Date();
+        const dateId = new Date(today.getTime() - today.getTimezoneOffset() * 60000)
+          .toISOString()
+          .split("T")[0];
 
-
-await db.collection("users")
-  .doc(userId)
-  .collection("logs")
-  .doc(dateId)
-  .set(
-    {
-      weight,
-      bmi,
-      bmr,
-      tdee,
-      timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-    },
-    { merge: true } // รวมข้อมูลถ้ามีอยู่แล้ว
-  );
+        await db.collection("users")
+          .doc(userId)
+          .collection("logs")
+          .doc(dateId)
+          .set(
+            {
+              weight,
+              bmi,
+              bmr,
+              tdee,
+              timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+            },
+            { merge: true }
+          );
 
         showLoading(false);
         showSuccess("บันทึกข้อมูลสำเร็จ!");
@@ -828,8 +1247,9 @@ await db.collection("users")
     });
 
     // UI helpers
-    function showLoading(show) {
+    function showLoading(show, text = "กำลังบันทึกข้อมูล...") {
       const overlay = document.getElementById("loading-overlay");
+      document.getElementById("loading-text").textContent = text;
       overlay.classList.toggle("active", show);
     }
 
@@ -853,6 +1273,23 @@ await db.collection("users")
         window.location.href = "login.html";
       }
     }
+
+    function toggleSidebar() {
+      document.getElementById("sidebar").classList.toggle("active");
+    }
+
+    // Close sidebar on outside click (mobile)
+    document.addEventListener('click', function(event) {
+      const sidebar = document.getElementById('sidebar');
+      const toggle = document.querySelector('.mobile-toggle');
+      
+      if (window.innerWidth <= 968 && 
+          !sidebar.contains(event.target) && 
+          !toggle.contains(event.target) &&
+          sidebar.classList.contains('active')) {
+        sidebar.classList.remove('active');
+      }
+    });
 
     window.addEventListener("DOMContentLoaded", loadUserData);
   </script>
