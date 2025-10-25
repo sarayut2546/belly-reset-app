@@ -10,6 +10,8 @@
   <script src="firebaseConfig.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
 
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
@@ -536,6 +538,82 @@
       margin-right: 4px;
     }
 
+    /* Exercise Cards */
+    .exercise-list {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+
+    .exercise-mini-card {
+      background: rgba(67, 160, 71, 0.05);
+      border-radius: 16px;
+      overflow: hidden;
+      transition: all 0.3s;
+      cursor: pointer;
+      border: 1px solid rgba(67, 160, 71, 0.2);
+      position: relative;
+    }
+
+    .exercise-mini-card:hover {
+      background: rgba(67, 160, 71, 0.1);
+      border-color: #43a047;
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .exercise-mini-image {
+      width: 100%;
+      height: 120px;
+      object-fit: cover;
+      background: linear-gradient(135deg, rgba(67, 160, 71, 0.2), rgba(46, 125, 50, 0.2));
+    }
+
+    .exercise-mini-body {
+      padding: 12px;
+    }
+
+    .exercise-mini-title {
+      font-weight: 600;
+      color: #fff;
+      font-size: 13px;
+      margin-bottom: 6px;
+      display: -webkit-box;
+      -webkit-line-clamp: 1;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .exercise-mini-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .exercise-mini-badge {
+      font-size: 10px;
+      padding: 4px 8px;
+      border-radius: 8px;
+      background: rgba(66, 165, 245, 0.2);
+      color: #42a5f5;
+      font-weight: 500;
+    }
+
+    .youtube-mini-badge {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      background: rgba(255, 0, 0, 0.9);
+      padding: 4px 8px;
+      border-radius: 8px;
+      font-size: 10px;
+      font-weight: 600;
+      color: white;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
     /* Loading & Empty States */
     .loading-state, .empty-state {
       text-align: center;
@@ -565,6 +643,37 @@
       color: #43a047;
     }
 
+    /* Modal */
+    .modal-content {
+      background: linear-gradient(135deg, rgba(15, 32, 39, 0.95) 0%, rgba(32, 58, 67, 0.95) 100%);
+      backdrop-filter: blur(20px);
+      border-radius: 24px;
+      border: 1px solid rgba(67, 160, 71, 0.3);
+    }
+
+    .modal-header {
+      border-bottom: 2px solid rgba(67, 160, 71, 0.2);
+      padding: 20px 30px;
+    }
+
+    .modal-title {
+      color: #fff;
+      font-weight: 600;
+    }
+
+    .btn-close {
+      filter: invert(1);
+      opacity: 0.7;
+    }
+
+    .btn-close:hover {
+      opacity: 1;
+    }
+
+    .modal-body {
+      padding: 30px;
+    }
+
     /* Mobile Toggle */
     .mobile-toggle {
       display: none;
@@ -592,6 +701,10 @@
     @media (max-width: 1200px) {
       .dashboard-grid {
         grid-template-columns: 1fr;
+      }
+      
+      .exercise-list {
+        grid-template-columns: repeat(3, 1fr);
       }
     }
 
@@ -623,6 +736,10 @@
         flex-direction: column;
         gap: 15px;
         text-align: center;
+      }
+      
+      .exercise-list {
+        grid-template-columns: 1fr;
       }
     }
 
@@ -657,26 +774,31 @@
     </div>
 
     <nav class="sidebar-nav">
-  <div class="nav-item">
-    <a href="user_dashboard.html" class="nav-link active">
-      <i class="bi bi-speedometer2"></i>
-      <span>แดชบอร์ด</span>
-    </a>
-  </div>
-  <div class="nav-item">
-    <a href="user_articles.html" class="nav-link">
-      <i class="bi bi-newspaper"></i>
-      <span>บทความ</span>
-    </a>
-  </div>
-  <div class="nav-item">
-    <a href="user_profile.html" class="nav-link">
-      <i class="bi bi-person-circle"></i>
-      <span>โปรไฟล์</span>
-    </a>
-  </div>
-</nav>
-
+      <div class="nav-item">
+        <a href="user_dashboard.html" class="nav-link active">
+          <i class="bi bi-speedometer2"></i>
+          <span>แดชบอร์ด</span>
+        </a>
+      </div>
+      <div class="nav-item">
+        <a href="user_articles.html" class="nav-link">
+          <i class="bi bi-newspaper"></i>
+          <span>บทความ</span>
+        </a>
+      </div>
+      <div class="nav-item">
+        <a href="user_exercise.html" class="nav-link">
+          <i class="bi bi-person-arms-up"></i>
+          <span>ท่าออกกำลังกาย</span>
+        </a>
+      </div>
+      <div class="nav-item">
+        <a href="user_profile.html" class="nav-link">
+          <i class="bi bi-person-circle"></i>
+          <span>โปรไฟล์</span>
+        </a>
+      </div>
+    </nav>
 
     <div class="sidebar-footer">
       <button class="logout-sidebar" onclick="logout()">
@@ -839,12 +961,44 @@
         </div>
       </div>
     </div>
+
+    <!-- Exercise Section -->
+    <div class="dashboard-card">
+      <div class="card-header">
+        <div class="card-title">
+          <i class="bi bi-person-arms-up"></i>
+          แนะนำท่าออกกำลังกาย
+        </div>
+        <a href="user_exercise.html" class="card-action">ดูทั้งหมด</a>
+      </div>
+      <div id="exercise-list" class="exercise-list">
+        <div class="loading-state">
+          <div class="loading-spinner"></div>
+          <p>กำลังโหลด...</p>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- Mobile Toggle -->
   <button class="mobile-toggle" onclick="toggleSidebar()">
     <i class="bi bi-list"></i>
   </button>
+
+  <!-- YouTube Modal -->
+  <div class="modal fade" id="youtubeModal" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalTitle">วิดีโอสอนท่า</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div id="modalYoutubePlayer"></div>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <script>
     firebase.initializeApp(firebaseConfig);
@@ -870,11 +1024,9 @@
 
         const data = userDoc.data();
         
-        // อัพเดทชื่อและ avatar
         const userName = data.name || "ผู้ใช้";
         document.getElementById("user-name").textContent = userName;
         
-        // อัพเดท avatar - ถ้ามีรูปให้แสดงรูป ถ้าไม่มีให้แสดงตัวอักษร
         const avatarElement = document.getElementById("user-avatar");
         if (data.profileImage) {
           avatarElement.innerHTML = `<img src="${data.profileImage}" alt="${userName}">`;
@@ -882,11 +1034,9 @@
           avatarElement.textContent = userName.charAt(0).toUpperCase();
         }
         
-        // น้ำหนัก
         const weight = data.weight || 0;
         document.getElementById("weight").textContent = weight;
         
-        // BMI
         let bmiValue = data.bmi || 0;
         if (bmiValue > 0) {
           document.getElementById("bmi").textContent = bmiValue.toFixed(1);
@@ -895,27 +1045,22 @@
           document.getElementById("bmi").textContent = "-";
         }
         
-        // BMR
         const bmr = data.bmr || 0;
         document.getElementById("bmr").textContent = bmr.toFixed(0);
         
-        // TDEE
         const tdee = data.tdee || 0;
         document.getElementById("tdee").textContent = tdee.toFixed(0);
         document.getElementById("current-tdee").textContent = tdee.toFixed(0);
         document.getElementById("target-tdee").textContent = tdee.toFixed(0);
         
-        // อาหาร (แคลอรี่ที่กิน)
         const foodCalories = data.foodCalories || 0;
         document.getElementById("food-calories").textContent = foodCalories;
         document.getElementById("current-food").textContent = foodCalories;
         
-        // คงเหลือ = TDEE - อาหาร
         const remaining = tdee - foodCalories;
         document.getElementById("remaining-calories").textContent = remaining.toFixed(0);
         document.getElementById("current-remaining").textContent = remaining.toFixed(0);
         
-        // อัพเดท Progress bars
         updateProgress(tdee, foodCalories, remaining);
         
       } catch (error) {
@@ -946,16 +1091,13 @@
     }
 
     function updateProgress(tdee, foodCalories, remaining) {
-      // TDEE Progress (100% เสมอ)
       document.getElementById("tdee-progress").style.width = "100%";
       
-      // Food Progress
       if (tdee > 0) {
         const foodPercent = Math.min((foodCalories / tdee) * 100, 100);
         document.getElementById("food-progress").style.width = foodPercent + "%";
       }
       
-      // Remaining Progress
       if (tdee > 0) {
         const remainingPercent = Math.max(0, Math.min((remaining / tdee) * 100, 100));
         document.getElementById("remaining-progress").style.width = remainingPercent + "%";
@@ -967,12 +1109,10 @@
         console.log("🚀 เริ่มโหลดข้อมูลกราฟ...");
         
         const weightData = [];
-        const calorieData = [];
         const labels = [];
         const today = new Date();
         today.setHours(0, 0, 0, 0);
 
-        // เตรียม date range 7 วัน
         const dateMap = {};
         const dateList = [];
         
@@ -984,102 +1124,22 @@
           
           dateList.push(isoDate);
           labels.push(label);
-          dateMap[isoDate] = {
-            weight: 0,
-            calories: 0
-          };
+          dateMap[isoDate] = { weight: 0 };
         }
 
-        console.log("📅 Date Range:", dateList);
-
-        // ดึงข้อมูล weight ปัจจุบัน
         const userDoc = await db.collection("users").doc(userId).get();
         const currentWeight = userDoc.exists && userDoc.data().weight ? userDoc.data().weight : 0;
-        
-        console.log("⚖️ น้ำหนักปัจจุบัน:", currentWeight, "กก.");
 
-        // ดึงข้อมูลจาก logs
         const logsRef = db.collection("users").doc(userId).collection("logs");
         const logSnapshot = await logsRef.get();
-        
-        console.log("📚 จำนวน logs:", logSnapshot.size);
 
-        // วนลูป logs
-for (const logDoc of logSnapshot.docs) {
-  const logData = logDoc.data();
-  const dateId = logDoc.id;
-  
-  // ลองแปลง timestamp เป็นวันที่
-  let logDate = null;
-  
-  // กรณีที่ document ID เป็นวันที่ (2025-10-13)
-  if (/^\d{4}-\d{2}-\d{2}$/.test(dateId)) {
-    logDate = dateId;
-  }
-  // กรณีที่มี timestamp field
-  else if (logData.timestamp) {
-    const date = logData.timestamp.toDate();
-    logDate = date.toISOString().split("T")[0];
-  }
-  
-  console.log(`📅 Log ID: ${dateId} -> Date: ${logDate}`);
-  
-  if (logDate && dateMap.hasOwnProperty(logDate)) {
-    // ดึงน้ำหนักจาก log document หลัก
-    let dayWeight = logData.weight || 0;
-    let dayCalories = 0;
-    
-    // เพิ่มแคลอรี่จาก log หลัก (ถ้ามี)
-    dayCalories += Number(logData.foodCalories || 0);
-    dayCalories += Number(logData.exerciseCalories || 0);
-    
-    // ดึงข้อมูลจาก exercise_details subcollection
-    try {
-      const exerciseDetailsRef = logsRef.doc(dateId).collection("exercise_details");
-      const exerciseSnapshot = await exerciseDetailsRef.get();
-
-      
-console.log(`📋 ${logDate} มี ${exerciseSnapshot.size} exercise_details`);
-      exerciseSnapshot.forEach(exDoc => {
-        const exData = exDoc.data();
-        console.log(`  - Exercise detail:`, exData);
-        
-        // ถ้า log หลักไม่มีน้ำหนัก ให้ลองหาใน exercise_details
-        if (dayWeight === 0 && exData.weight && exData.weight > 0) {
-          dayWeight = exData.weight;
-          console.log(`  ✅ พบน้ำหนัก: ${dayWeight} กก.`);
-        }
-        
-        const foodCal = Number(exData.foodCalories || exData.foodcalories || 
-                               exData.food_calories || exData.calories || 0);
-        const exerciseCal = Number(exData.exerciseCalories || exData.exercisecalories || 
-                                   exData.exercise_calories || exData.burnedCalories || 0);
-        
-        dayCalories += foodCal + exerciseCal;
-      });
-    } catch (err) {
-      console.error(`❌ Error reading exercise_details for ${dateId}:`, err);
-    }
-
-    dateMap[logDate].weight = dayWeight;
-    dateMap[logDate].calories = dayCalories;
-    
-    console.log(`✅ ${logDate} -> น้ำหนัก: ${dayWeight} กก., แคลอรี่: ${dayCalories}`);
-  }
-}
-
-console.log("📊 Date Map สุดท้าย:", dateMap);
-
-        // ✅ ปรับใหม่ให้กราฟแสดงเฉพาะวันที่มีน้ำหนักจริง
         const dateWeightMap = {};
 
-        // รวมข้อมูลน้ำหนักจากทั้ง document ที่ชื่อเป็นวันที่และชื่อสุ่ม
         for (const logDoc of logSnapshot.docs) {
           const logData = logDoc.data();
           const dateId = logDoc.id;
           let logDate = null;
 
-          // ตรวจสอบว่าเป็นรูปแบบวันที่หรือไม่
           if (/^\d{4}-\d{2}-\d{2}$/.test(dateId)) {
             logDate = dateId;
           } else if (logData.timestamp) {
@@ -1091,7 +1151,6 @@ console.log("📊 Date Map สุดท้าย:", dateMap);
 
           let dayWeight = logData.weight || 0;
 
-          // ตรวจสอบใน exercise_details เผื่อมีข้อมูลน้ำหนัก
           try {
             const exRef = logsRef.doc(dateId).collection("exercise_details");
             const exSnap = await exRef.get();
@@ -1110,12 +1169,10 @@ console.log("📊 Date Map สุดท้าย:", dateMap);
           }
         }
 
-        console.log("📊 dateWeightMap:", dateWeightMap);
-
-        // ✅ แสดงน้ำหนักต่อเนื่องทุกวัน ถ้าวันไหนไม่มีข้อมูลจะคงค่าน้ำหนักล่าสุดไว้
         const sortedDates = Object.keys(dateWeightMap).sort();
         if (sortedDates.length === 0) {
           console.warn("⚠️ ไม่มีข้อมูลน้ำหนักในระบบ");
+          createWeightChart(labels, new Array(7).fill(0));
           return;
         }
 
@@ -1144,26 +1201,17 @@ console.log("📊 Date Map สุดท้าย:", dateMap);
           chartWeights.push(weight);
         }
 
-        console.log("📅 Labels (ทั้งหมด):", chartLabels);
-console.log("⚖️ WeightData (ทั้งหมด):", chartWeights);
+        const totalDays = chartLabels.length;
+        const startIndex = Math.max(0, totalDays - 7);
+        const recentLabels = chartLabels.slice(startIndex);
+        const recentWeights = chartWeights.slice(startIndex);
 
-// ✅ แสดงเฉพาะ 7 วันล่าสุด
-const totalDays = chartLabels.length;
-const startIndex = Math.max(0, totalDays - 7);
-const recentLabels = chartLabels.slice(startIndex);
-const recentWeights = chartWeights.slice(startIndex);
-
-console.log("📅 Labels (7 วันล่าสุด):", recentLabels);
-console.log("⚖️ WeightData (7 วันล่าสุด):", recentWeights);
-
-createWeightChart(recentLabels, recentWeights);
-
+        createWeightChart(recentLabels, recentWeights);
 
       } catch (error) {
         console.error("🔥 Error:", error);
       }
     }
-
 
     function createWeightChart(labels, data) {
       const ctx = document.getElementById('weightChart').getContext('2d');
@@ -1300,6 +1348,93 @@ createWeightChart(recentLabels, recentWeights);
       }
     }
 
+    async function loadExercises() {
+      const list = document.getElementById("exercise-list");
+      
+      try {
+        const snapshot = await db.collection("exercise_guide")
+          .orderBy("createdAt", "desc")
+          .limit(4)
+          .get();
+
+        if (snapshot.empty) {
+          list.innerHTML = `
+            <div class="empty-state" style="grid-column: 1 / -1;">
+              <i class="bi bi-inbox"></i>
+              <p>ยังไม่มีท่าออกกำลังกาย</p>
+            </div>
+          `;
+          return;
+        }
+
+        list.innerHTML = "";
+        snapshot.forEach(doc => {
+          const ex = doc.data();
+          const div = document.createElement("div");
+          div.className = "exercise-mini-card";
+          
+          const imageUrl = getYoutubeThumbnail(ex.youtubeUrl) || 'https://via.placeholder.com/300x200/2e7d32/ffffff?text=Exercise';
+          
+          div.innerHTML = `
+            <div style="position: relative;">
+              <img src="${imageUrl}" class="exercise-mini-image" alt="${ex.name || 'ท่าออกกำลังกาย'}" onerror="this.src='https://via.placeholder.com/300x200/2e7d32/ffffff?text=Belly+Reset'">
+              ${ex.youtubeUrl ? '<div class="youtube-mini-badge"><i class="bi bi-play-fill"></i> วิดีโอ</div>' : ''}
+            </div>
+            <div class="exercise-mini-body">
+              <div class="exercise-mini-title">${ex.name || "ไม่มีชื่อ"}</div>
+              <div class="exercise-mini-badges">
+                <span class="exercise-mini-badge">${ex.bodyPart || "ทั่วไป"}</span>
+              </div>
+            </div>
+          `;
+          
+          div.onclick = () => {
+            if (ex.youtubeUrl) {
+              openYoutubeModal(ex.youtubeUrl, ex.name);
+            } else {
+              window.location.href = "user_exercise.html";
+            }
+          };
+          
+          list.appendChild(div);
+        });
+        
+      } catch (error) {
+        console.error("Error loading exercises:", error);
+        list.innerHTML = `
+          <div class="empty-state" style="grid-column: 1 / -1;">
+            <i class="bi bi-exclamation-triangle"></i>
+            <p>เกิดข้อผิดพลาดในการโหลดท่าออกกำลังกาย</p>
+          </div>
+        `;
+      }
+    }
+
+    function getYoutubeId(url) {
+      if (!url) return null;
+      const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+      const match = url.match(regExp);
+      return (match && match[2].length === 11) ? match[2] : null;
+    }
+
+    function getYoutubeThumbnail(url) {
+      const videoId = getYoutubeId(url);
+      return videoId ? `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg` : null;
+    }
+
+    function openYoutubeModal(url, title) {
+      if (!url) return;
+      
+      const videoId = getYoutubeId(url);
+      if (!videoId) return;
+      
+      document.getElementById("modalTitle").textContent = title || 'วิดีโอสอนท่า';
+      document.getElementById("modalYoutubePlayer").innerHTML = 
+        `<iframe width="100%" height="450" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+      
+      new bootstrap.Modal(document.getElementById('youtubeModal')).show();
+    }
+
     function viewArticle(id) {
       window.location.href = `user_article_view.html?id=${id}`;
     }
@@ -1315,7 +1450,6 @@ createWeightChart(recentLabels, recentWeights);
       document.getElementById("sidebar").classList.toggle("active");
     }
 
-    // Close sidebar when clicking outside on mobile
     document.addEventListener('click', function(event) {
       const sidebar = document.getElementById('sidebar');
       const toggle = document.querySelector('.mobile-toggle');
@@ -1328,10 +1462,15 @@ createWeightChart(recentLabels, recentWeights);
       }
     });
 
+    document.getElementById('youtubeModal').addEventListener('hidden.bs.modal', function () {
+      document.getElementById("modalYoutubePlayer").innerHTML = "";
+    });
+
     window.addEventListener("DOMContentLoaded", () => {
       loadUserData();
       loadChartData();
       loadArticles();
+      loadExercises();
     });
   </script>
 </body>

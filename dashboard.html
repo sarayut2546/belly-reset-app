@@ -799,11 +799,11 @@
         document.getElementById("user-count").innerText = userSnapshot.size;
 
         // นับเมนูอาหาร
-        const foodSnapshot = await db.collection("food_catalog").get();
+        const foodSnapshot = await db.collection("food_logs").get();
         document.getElementById("food-count").innerText = foodSnapshot.size;
 
         // นับท่าออกกำลังกาย
-        const exerciseSnapshot = await db.collection("exercises").get();
+        const exerciseSnapshot = await db.collection("exercise_guide").get();
         document.getElementById("exercise-count").innerText = exerciseSnapshot.size;
 
         // โหลดผู้ใช้ล่าสุด

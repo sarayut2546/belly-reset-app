@@ -281,6 +281,34 @@
       return urlParams.get('id');
     }
 
+    // ฟังก์ชันเพิ่มจำนวน views
+    async function incrementViews(articleId) {
+      try {
+        const articleRef = db.collection("articles").doc(articleId);
+        
+        // ใช้ FieldValue.increment เพื่อเพิ่มค่า views
+        await articleRef.update({
+          views: firebase.firestore.FieldValue.increment(1)
+        });
+        
+        console.log('✅ เพิ่มจำนวนการเข้าชมสำเร็จ');
+      } catch (error) {
+        console.error('❌ Error incrementing views:', error);
+        
+        // ถ้า field views ยังไม่มี ให้สร้างใหม่
+        if (error.code === 'not-found') {
+          try {
+            await db.collection("articles").doc(articleId).update({
+              views: 1
+            });
+            console.log('✅ สร้าง field views และตั้งค่าเริ่มต้นสำเร็จ');
+          } catch (updateError) {
+            console.error('❌ Error creating views field:', updateError);
+          }
+        }
+      }
+    }
+
     async function loadArticle() {
       const articleId = getArticleId();
       const container = document.getElementById("article-content");
@@ -297,6 +325,7 @@
       }
 
       try {
+        // โหลดบทความ
         const doc = await db.collection("articles").doc(articleId).get();
 
         if (!doc.exists) {
@@ -311,7 +340,12 @@
         }
 
         const article = doc.data();
+        
+        // แสดงบทความ
         displayArticle(article);
+        
+        // เพิ่มจำนวน views (ทำหลังจากแสดงบทความเพื่อไม่ให้ผู้ใช้รอนาน)
+        incrementViews(articleId);
 
       } catch (error) {
         console.error("Error loading article:", error);
@@ -338,6 +372,7 @@
       const author = article.author || "ผู้ดูแลระบบ";
       const category = article.category || "ทั่วไป";
       const summary = article.summary || "";
+      const views = article.views || 0;
 
       container.innerHTML = `
         <div class="article-card">
@@ -365,7 +400,7 @@
               </div>
               <div class="meta-item">
                 <i class="bi bi-eye"></i>
-                <span>${article.views || 0} ครั้ง</span>
+                <span id="view-count">${views + 1}</span> ครั้ง
               </div>
             </div>
 
